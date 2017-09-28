@@ -23,6 +23,7 @@
 
 
 void subtract_mask(Texture* result, Texture* bg, Texture* src, DWORD border);
+int n = 0;
 
 
 UINT MainLoop(WindowManager *winmgr)
@@ -58,8 +59,8 @@ UINT MainLoop(WindowManager *winmgr)
 	g.Register(&source);
 
 	Ball ball(&g, L"ball.x");	
-	ball.SetScale(2.0f, 2.0f, 2.0f);
-	ball.SetPosition(0.0f, 6.0f, 0.0f, GL_ABSOLUTE);
+	ball.SetScale(1.0f, 1.0f, 1.0f);
+	ball.SetPosition(0.0f, 8.0f, 0.0f, GL_ABSOLUTE);
 	g.Register(&ball);
 
 
@@ -109,15 +110,19 @@ inline void Ball::onTouch(Event* e)
 	VECTOR2D c = getPosition2D();
 
 	vx =  (c.x - e->x) * 0.05f;
-	vy = -(c.y - e->y) * 0.05f;
+	vy = -(c.y - e->y) * 0.1f;
+	vy1 = vy;
+	vx1 = vx;
+	n = 1;
 }
 
 inline void Ball::move()
 {
 	VECTOR2D c=getPosition2D();
 
+
 	//˜g‚Ì”½ŽË
-	bool side = c.x < 0 || c.x > sizex;
+	/*bool side = c.x < 0 || c.x > sizex;
 	bool ground = c.y > sizey - 50 && vy < 0;
 
 	if (!onframe_x && side){
@@ -131,17 +136,17 @@ inline void Ball::move()
 		vy *= -1.0f;
 		onframe_y = true;
 	}
-	else if (onframe_y && !ground){ onframe_y = false; }
+	else if (onframe_y && !ground){ onframe_y = false; }*/
 
-	//Ž©—R—Ž‰º‚Ü‚½‚Í’âŽ~
-	if (c.y > sizey - 50 && vy<0.03f)
-		vy = 0;
-	else
-		vy -= 0.03f;
-
-	//‹ó‹C’ïR
-	vx *= 0.8f;
-	vy *= 0.8f;
+	
+	if (n==0)
+	vy -= 0.02;
+	if (n == 1){
+		vy = vy1;
+		vx = vx;
+	}
+	
+	
 
 	SetPosition(vx, vy, 0.0f, GL_RELATIVE);
 }

@@ -17,7 +17,7 @@
 
 class Ball : public Mesh, public Touchable{
 public:
-	float vx, vy;
+	float vx , vy,vx1,vy1;
 	bool onframe_x,onframe_y;
 	void onTouch(Event* ev);
 	void move();
