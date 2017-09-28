@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstring>
+#include <time.h>
 #include <tchar.h>
 #include <windows.h>
 #define D3D_DEBUG_INFO
@@ -29,6 +30,7 @@ void subtract_mask(Texture* result, Texture* bg, Texture* src, DWORD border);
 UINT MainLoop(WindowManager *winmgr)
 {
 	ShowDebugWindow();
+	
 
 	//for debug(1/2)
 	//Window window2;
@@ -47,6 +49,8 @@ UINT MainLoop(WindowManager *winmgr)
 	Light light(&g);	
 	g.Register(&light);
 
+	srand((unsigned int)time(NULL));
+
 	ARSD d;
 	d.Init();
 	d.AttachCam(0);
@@ -58,18 +62,14 @@ UINT MainLoop(WindowManager *winmgr)
 	source.SetDrawMode(TRUE);
 	g.Register(&source);
 
+	srand(100);
+
 	Ball ball(&g, L"ball.x");	
 	ball.SetScale(1.0f, 1.0f, 1.0f);
 	ball.SetPosition(0.0f, 8.0f, 0.0f, GL_ABSOLUTE);
-	//g.Register(&ball);
-	Ball balls[2] = { Ball(&g, L"ball.x"),Ball(&g, L"ball.x"),/* Ball(&g, L"ball.x"), Ball(&g, L"ball.x"), Ball(&g, L"ball.x"), Ball(&g, L"ball.x") */};
-	for (int i = 0; i < 2; i++){
-		//balls[i] = Ball(&g, L"ball.x");
-		balls[i].SetScale(1.0f, 1.0f, 1.0f);
-		balls[i].SetPosition(rand() % 12-6, rand() %12 +-6, 0.0f, GL_ABSOLUTE);
-		g.Register(&balls[i]);
-	}
-
+	g.Register(&ball);
+	
+	
 
 	//Plate face(&g,L"face.bmp");
 	//face.SetScale(5.0f, 5.0f, 0.5f);
@@ -92,10 +92,8 @@ UINT MainLoop(WindowManager *winmgr)
 		
 		Touchable::update(&hitArea, 100);
 		
-		for (int i = 0; i < 2; i++){
-			balls[i].move();
-		}
-		//ball.move();		
+		
+		ball.move();		
 		//face.move();
 
 		//for debug(2/2)
@@ -126,32 +124,48 @@ inline void Ball::onTouch(Event* e)
 	n = 1;
 }
 
+int call_rand(){
+	
+	
+	return  (rand() % 500 - 250);
+}
+
 inline void Ball::move()
 {
+
+	 static float first_vx = call_rand(), first_vy = -1.;
+	
 	VECTOR2D c=getPosition2D();
 
 
 	//˜g‚Ì”½ŽË
-	/*bool side = c.x < 0 || c.x > sizex;
-	bool ground = c.y > sizey - 50 && vy < 0;
+	bool side = c.x < 0 || c.x > sizex;
+	bool ground = c.y > sizey - 50 && vy < 0||c.y<30;
 
 	if (!onframe_x && side){
-		vx *= -1.0f;
+		SetPosition(0.0f, 8.0f, 0.0f, GL_ABSOLUTE);
+		first_vx = call_rand()*0.01,
 		onframe_x = true;
+		n = 0;
 	}
 	else if (onframe_x && !side){ onframe_x = false; }
 	
 
 	if (!onframe_y && ground){
-		vy *= -1.0f;
+		SetPosition(0.0f, 8.0f, 0.0f, GL_ABSOLUTE);
+		first_vx = call_rand()*0.01,
 		onframe_y = true;
+		n = 0;
 	}
-	else if (onframe_y && !ground){ onframe_y = false; }*/
+	else if (onframe_y && !ground){ onframe_y = false; }
 
-	
-	if (n==0)
-	vy = first_vy*0.01-0.03;
-	vx = first_vx*0.01+0.03;
+	if (n == 2){
+		
+	}
+		if (n == 0){
+			vy = first_vy;
+			vx = first_vx;
+		}
 	if (n == 1){
 		vy = vy1;
 		vx = vx1;

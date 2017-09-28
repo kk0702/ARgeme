@@ -17,8 +17,8 @@
 
 class Ball : public Mesh, public Touchable{
 public:
-	float rand0 = rand() % 30 - 6;
-	float vx , vy,vx1,vy1,first_vx=rand0,first_vy=abs(rand0);
+	float rand0 = rand() % 35;
+	float vx, vy, vx1, vy1 , first_vx = rand0*0.01, first_vy = -0.5;
 	int n = 0;
 	bool onframe_x,onframe_y;
 	void onTouch(Event* ev);
