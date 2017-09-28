@@ -17,10 +17,13 @@
 
 class Ball : public Mesh, public Touchable{
 public:
-	float vx , vy,vx1,vy1;
+	float rand0 = rand() % 30 - 6;
+	float vx , vy,vx1,vy1,first_vx=rand0,first_vy=abs(rand0);
+	int n = 0;
 	bool onframe_x,onframe_y;
 	void onTouch(Event* ev);
 	void move();
+	Ball();
 	Ball(ARSG* _g, wchar_t fln[]) 
 		: Mesh(_g, fln), vx(0.2f), vy(-0.2f), onframe_x(false), onframe_y(false)
 	{

@@ -1,6 +1,6 @@
 #pragma once
 
-
+#include <cstring>
 #include <tchar.h>
 #include <windows.h>
 #define D3D_DEBUG_INFO
@@ -23,7 +23,7 @@
 
 
 void subtract_mask(Texture* result, Texture* bg, Texture* src, DWORD border);
-int n = 0;
+
 
 
 UINT MainLoop(WindowManager *winmgr)
@@ -61,7 +61,14 @@ UINT MainLoop(WindowManager *winmgr)
 	Ball ball(&g, L"ball.x");	
 	ball.SetScale(1.0f, 1.0f, 1.0f);
 	ball.SetPosition(0.0f, 8.0f, 0.0f, GL_ABSOLUTE);
-	g.Register(&ball);
+	//g.Register(&ball);
+	Ball balls[2] = { Ball(&g, L"ball.x"),Ball(&g, L"ball.x"),/* Ball(&g, L"ball.x"), Ball(&g, L"ball.x"), Ball(&g, L"ball.x"), Ball(&g, L"ball.x") */};
+	for (int i = 0; i < 2; i++){
+		//balls[i] = Ball(&g, L"ball.x");
+		balls[i].SetScale(1.0f, 1.0f, 1.0f);
+		balls[i].SetPosition(rand() % 12-6, rand() %12 +-6, 0.0f, GL_ABSOLUTE);
+		g.Register(&balls[i]);
+	}
 
 
 	//Plate face(&g,L"face.bmp");
@@ -85,7 +92,10 @@ UINT MainLoop(WindowManager *winmgr)
 		
 		Touchable::update(&hitArea, 100);
 		
-		ball.move();		
+		for (int i = 0; i < 2; i++){
+			balls[i].move();
+		}
+		//ball.move();		
 		//face.move();
 
 		//for debug(2/2)
@@ -109,7 +119,7 @@ inline void Ball::onTouch(Event* e)
 {
 	VECTOR2D c = getPosition2D();
 
-	vx =  (c.x - e->x) * 0.05f;
+	vx =  (c.x - e->x) * 0.1f;
 	vy = -(c.y - e->y) * 0.1f;
 	vy1 = vy;
 	vx1 = vx;
@@ -140,10 +150,11 @@ inline void Ball::move()
 
 	
 	if (n==0)
-	vy -= 0.02;
+	vy = first_vy*0.01-0.03;
+	vx = first_vx*0.01+0.03;
 	if (n == 1){
 		vy = vy1;
-		vx = vx;
+		vx = vx1;
 	}
 	
 	
